@@ -39,11 +39,17 @@ const UpdateMovie = (props) => {
 
     }
 
-    
+    const actors = movie.stars.toString()
+    console.log('actors: ', actors)
     
     const handleChange = (e) => {
         e.preventDefault();
+        if (e.target.name ==='stars'){
+            const starValue = e.target.value.split(",")
+            setMovie({...movie, stars: starValue })
+        } else {
         setMovie({...movie, [e.target.name]:e.target.value})
+        }
     }
     return (
         <div className="saved-list">
@@ -73,9 +79,11 @@ const UpdateMovie = (props) => {
                 />
                 
                     
-                    {/* <label htmlFor="actors">actors</label>
-                        <input type="text"  name="actors" 
-                        value={movie.actors.split(",")}/> */}
+                <label htmlFor="stars">actors</label>
+                    <input type="text"  
+                    name="stars" 
+                    onChange={handleChange}
+                    value={actors}/>
                         
                     
                 
