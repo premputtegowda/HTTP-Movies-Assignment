@@ -23,9 +23,9 @@ export default class MovieList extends Component {
   render() {
     return (
       <div className="movie-list">
-        {/* {this.state.movies.map(movie => ( */}
+        {this.state.movies.map(movie => (
           <MovieDetails key={movie.id} movie={movie} />
-        {/* ))} */}
+        ))}
       </div>
     );
   }
@@ -40,7 +40,13 @@ function MovieDetails({ movie }) {
         <MovieCard movie={movie} />
       </Link>
       
-      
+      <Route
+        path="/movies/:id"
+        render={props => {
+          return <UpdateMovie {...props} movie={movie} />;
+        }}
+
+      />
       
     </div>
   );

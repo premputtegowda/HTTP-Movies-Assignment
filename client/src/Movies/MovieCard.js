@@ -6,7 +6,7 @@ import UpdateMovie from "./UpdateMovie";
 
 const MovieCard = props => {
   const { title, director, metascore, stars, id } = props.movie;
-  const [edit, setEdit]
+ 
   
   return (
     <div className="movie-card">

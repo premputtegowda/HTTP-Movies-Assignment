@@ -1,34 +1,49 @@
 import React, { useState, useEffect }from 'react';
+import { useParams, useHistory } from 'react-router-dom'
 import axios from 'axios';
-
+const initialData = {
+    id:'',
+    title:'',
+director: '',
+metascore:'',
+stars:[]
+}
 
 const UpdateMovie = (props) => {
-    const initialData = {id:'',title:'',director:'',metascore:'',stars:[]}
-    const [movieData, setMovieData] = useState(initialData)
-    const id = props.match.params.id;
-    console.log(id)
-    
-    useEffect(()=> {
-        axios
-      .get(`http://localhost:5000/api/movies/${id}`)
-      .then(res => setMovieData(res.data))
-      .catch(err => console.log(err.response));
+    const [movie, setMovie] = useState(initialData)
+    const {id} = useParams();
+    let history = useHistory();
+    console.log(history)
+    const movieData = () => {
+        if (props.movies) {
+            const movieToUpdate = props.movies.find(movie => `${movie.id}` === id);
+            setMovie(movieToUpdate);
+            
 
-    },[id])
-    console.log(movieData)
+        }
+    }
+    
+    useEffect(movieData,[props.movies]);
+    console.log(movie)
     const handleSubmit = (e) => {
         e.preventDefault()
         // /api/movies/:id
         axios
-        .get(`http://localhost:5000/api/movies/${id}`,movieData)
-        .then(res => console.log(res))
+        .put(`http://localhost:5000/api/movies/${movie.id}`,movie)
+        .then(res => {
+            const moviesArr = props.movies.filter(movie => movie.id !== res.data.id)
+            props.setMovies([...moviesArr, res.data])
+            history.push(`/movies/${movie.id}`)
+        })
         .catch(err => console.log(err));
 
     }
+
+    
     
     const handleChange = (e) => {
         e.preventDefault();
-        setMovieData({...movieData, [e.target.name]:e.target.value})
+        setMovie({...movie, [e.target.name]:e.target.value})
     }
     return (
         <div className="saved-list">
@@ -37,7 +52,7 @@ const UpdateMovie = (props) => {
                 <input type="text"
                         name='title'
                         onChange={handleChange}
-                        value={movieData.title}
+                        value={movie.title}
 
                 />
 
@@ -45,7 +60,7 @@ const UpdateMovie = (props) => {
                 <input type="text"
                     name='director'
                     onChange={handleChange}
-                    value={movieData.director}
+                    value={movie.director}
 
                 />
 
@@ -53,7 +68,7 @@ const UpdateMovie = (props) => {
                 <input type="text"
                     name='metascore'
                     onChange={handleChange}
-                    value={movieData.metascore}
+                    value={movie.metascore}
 
                 />
                 
